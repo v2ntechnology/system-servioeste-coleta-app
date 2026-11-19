@@ -1,0 +1,122 @@
+# Learn more https://docs.github.com/en/get-started/getting-started-with-git/ignoring-files
+
+# dependencies
+node_modules/
+
+# Expo
+.expo/
+dist/
+web-build/
+expo-env.d.ts
+
+# Native
+.kotlin/
+*.orig.*
+*.jks
+*.p8
+*.p12
+*.key
+*.mobileprovision
+
+# Metro
+.metro-health-check*
+
+# debug
+npm-debug.*
+yarn-debug.*
+yarn-error.*
+
+# macOS
+.DS_Store
+*.pem
+
+# local env files
+.env*.local
+
+# typescript
+*.tsbuildinfo
+
+example
+
+# generated native folders
+/ios
+/android
+
+# ==== Regras do Servioeste Coleta ====
+# ==== Variáveis de ambiente e segredos ====
+.env
+.env.*
+!.env.example
+*.env
+secrets/
+.secrets/
+
+# ==== Certificados, chaves e credenciais ====
+*.pem
+*.key
+*.crt
+*.cer
+*.p12
+*.pfx
+*.jks
+*.keystore
+google-services.json
+GoogleService-Info.plist
+credentials*.json
+service-account*.json
+
+# ==== Dados reais da Servioeste (clientes, assinaturas, documentos, comprovantes) ====
+*.xlsx
+*.xlsm
+*.xls
+*.csv
+*.docx
+*.pdf
+# PDFs da documentação (gerados por scripts/gerar_pdf.py) e o minimundo vão para o repositório
+!docs/pdf/*.pdf
+!docs/Minimundo*.pdf
+uploads/
+arquivos/
+anexos/
+fotos/
+assinaturas/
+comprovantes/
+*.sql
+*.dump
+backups/
+
+# ==== Node / Vite / Expo ====
+node_modules/
+dist/
+build/
+.expo/
+*.tsbuildinfo
+npm-debug.log*
+pnpm-debug.log*
+
+# ==== Python ====
+__pycache__/
+*.py[cod]
+.venv*/
+venv/
+.pytest_cache/
+.ruff_cache/
+.mypy_cache/
+*.egg-info/
+
+# ==== Editor / SO ====
+.vscode/*
+!.vscode/settings.json
+!.vscode/extensions.json
+.idea/
+.DS_Store
+Thumbs.db
+*.log
+
+# ==== Claude Code local ====
+.claude/settings.local.json
+CLAUDE.md
+
+# ==== Banco local ====
+*.db
+*.db-journal
