@@ -6,6 +6,7 @@ import { Botao } from "@/components/ui/Botao";
 import { Cartao } from "@/components/ui/Cartao";
 import { Faixa } from "@/components/ui/Faixa";
 import { ItemLista } from "@/components/ui/Lista";
+import { Simbolo } from "@/components/ui/Logo";
 import { Selo } from "@/components/ui/Selo";
 import { Tela } from "@/components/ui/Tela";
 import { Texto } from "@/components/ui/Texto";
@@ -31,11 +32,14 @@ export default function Inicio() {
 
   return (
     <Tela rodape={botao}>
-      <View style={{ gap: espaco.xs, marginBottom: espaco.sm }}>
-        <Texto variante="titulo">Olá, {primeiroNome(motorista?.nome ?? "")}!</Texto>
-        <Texto suave>
-          Bom trabalho hoje · {diaDaSemana(new Date())}, {data(new Date())}
-        </Texto>
+      <View style={{ flexDirection: "row", alignItems: "center", gap: espaco.md, marginBottom: espaco.sm }}>
+        <Simbolo tamanho={40} />
+        <View style={{ flex: 1, gap: espaco.xs }}>
+          <Texto variante="titulo">Olá, {primeiroNome(motorista?.nome ?? "")}!</Texto>
+          <Texto suave>
+            Bom trabalho hoje · {diaDaSemana(new Date())}, {data(new Date())}
+          </Texto>
+        </View>
       </View>
 
       {rota ? (
