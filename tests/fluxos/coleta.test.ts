@@ -9,7 +9,7 @@ jest.mock("@/dispositivo/localizacao", () => ({
   lerLocalizacao: jest.fn(async () => ({ lat: -22.8753, lng: -43.4652, precisao: 8, mocked: false, em: new Date().toISOString() })),
 }));
 
-const assinada = { tipo: "assinada", caminhoSvg: "M0 0 L10 10", nome: "Alex", fotoDocumentoUri: "file://doc.jpg" } as const;
+const assinada = { tipo: "assinada", forma: "desenhada", caminhoSvg: "M0 0 L10 10", nome: "Alex", fotoDocumentoUri: "file://doc.jpg" } as const;
 
 function preparar() {
   useBanco.getState().carregar(gerarDadosFicticios());

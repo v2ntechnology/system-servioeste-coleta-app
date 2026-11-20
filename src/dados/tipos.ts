@@ -100,8 +100,18 @@ export type ProvaQr =
 
 export type Localizacao = { lat: number; lng: number; precisao: number | null; mocked: boolean; em: string };
 
+/** Desenhada com o dedo (caminho SVG) ou digitada (o nome numa fonte manuscrita escolhida). */
+export type FormaAssinatura = "desenhada" | "digitada";
+
 export type Assinatura =
-  | { tipo: "assinada"; caminhoSvg: string; nome: string; fotoDocumentoUri: string }
+  | {
+      tipo: "assinada";
+      forma: FormaAssinatura;
+      caminhoSvg?: string; // forma = "desenhada"
+      fonte?: string; // forma = "digitada" (id de src/tema/fontesAssinatura.ts)
+      nome: string;
+      fotoDocumentoUri: string;
+    }
   | { tipo: "recusada"; nome?: string };
 
 export type MotivoRevisao = "semQr" | "foraDaArea" | "localizacaoFalsa" | "semLocalizacao";

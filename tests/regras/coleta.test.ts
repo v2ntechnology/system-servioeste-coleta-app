@@ -18,7 +18,8 @@ function coleta(parcial: Partial<Coleta> = {}): Coleta {
   };
 }
 
-const assinada = { tipo: "assinada", caminhoSvg: "M0 0 L1 1", nome: "Alex", fotoDocumentoUri: "file://doc.jpg" } as const;
+const assinada = { tipo: "assinada", forma: "desenhada", caminhoSvg: "M0 0 L1 1", nome: "Alex", fotoDocumentoUri: "file://doc.jpg" } as const;
+const digitada = { tipo: "assinada", forma: "digitada", fonte: "great-vibes", nome: "Alex", fotoDocumentoUri: "file://doc.jpg" } as const;
 
 describe("itens da coleta", () => {
   it("acrescenta e corrige sem repetir o tipo", () => {
@@ -51,6 +52,13 @@ describe("finalizar", () => {
     expect(errosParaFinalizar(comItens, { ...assinada, nome: " " })[0]).toMatch(/nome/);
     expect(errosParaFinalizar(comItens, assinada)).toEqual([]);
     expect(errosParaFinalizar(comItens, { tipo: "recusada" })).toEqual([]);
+  });
+
+  it("assinatura digitada exige o nome, o estilo e a foto, mas não o traço", () => {
+    expect(errosParaFinalizar(comItens, digitada)).toEqual([]);
+    expect(errosParaFinalizar(comItens, { ...digitada, fonte: undefined })[0]).toMatch(/estilo/);
+    expect(errosParaFinalizar(comItens, { ...digitada, nome: "" })[0]).toMatch(/nome/);
+    expect(errosParaFinalizar(comItens, { ...digitada, fotoDocumentoUri: "" })[0]).toMatch(/foto do documento/);
   });
 
   it("exige o QR lido ou justificado", () => {

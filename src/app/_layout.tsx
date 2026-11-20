@@ -11,6 +11,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useBanco } from "@/dados/repositorio";
 import { instalarDemo, prepararDadosDemo } from "@/demo";
 import { useSessao } from "@/features/sessao/useSessao";
+import { ARQUIVOS_FONTES_ASSINATURA } from "@/tema/fontesAssinatura";
 import { fonte } from "@/tema/tokens";
 import { usePreferenciaTema, useTema } from "@/tema/useTema";
 
@@ -33,7 +34,7 @@ function useHidratado(armazem: ArmazemPersistido): boolean {
 }
 
 export default function LayoutRaiz() {
-  const [fontes] = useFonts({ Rubik_400Regular, Rubik_500Medium, Rubik_700Bold });
+  const [fontes] = useFonts({ Rubik_400Regular, Rubik_500Medium, Rubik_700Bold, ...ARQUIVOS_FONTES_ASSINATURA });
   const banco = useHidratado(useBanco);
   const sessao = useHidratado(useSessao);
   const tema = useHidratado(usePreferenciaTema);

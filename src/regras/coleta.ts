@@ -32,10 +32,14 @@ export function semItem(coleta: Coleta, tipoResiduoId: string): ItemColeta[] {
 }
 
 /** O que falta para a assinatura ficar completa (vazio = completa). */
-export function faltasDaAssinatura(a: Partial<{ caminhoSvg: string; nome: string; fotoDocumentoUri: string }>): string[] {
+export function faltasDaAssinatura(
+  a: Partial<{ forma: "desenhada" | "digitada"; caminhoSvg: string; fonte: string; nome: string; fotoDocumentoUri: string }>,
+): string[] {
   const faltas: string[] = [];
-  if (!a.caminhoSvg) faltas.push("a assinatura");
-  if (!a.nome?.trim()) faltas.push("o nome de quem assinou");
+  const forma = a.forma ?? "desenhada";
+  if (forma === "desenhada" && !a.caminhoSvg) faltas.push("a assinatura");
+  if (forma === "digitada" && !a.fonte) faltas.push("o estilo da assinatura");
+  if (!a.nome?.trim()) faltas.push(forma === "digitada" ? "o nome para a assinatura" : "o nome de quem assinou");
   if (!a.fotoDocumentoUri) faltas.push("a foto do documento");
   return faltas;
 }

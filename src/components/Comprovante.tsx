@@ -5,6 +5,7 @@ import QRCode from "react-native-qrcode-svg";
 import Svg, { Path } from "react-native-svg";
 
 import { CAIXA_ASSINATURA } from "@/components/Assinatura";
+import { TextoAssinatura } from "@/components/AssinaturaDigitada";
 import { Logo } from "@/components/ui/Logo";
 import { Texto } from "@/components/ui/Texto";
 import type { Cliente, Coleta, Pessoa, Rota, TipoResiduo, Veiculo } from "@/dados/tipos";
@@ -107,10 +108,14 @@ export function Comprovante({ via, coleta, cliente, rota, veiculo, motorista, co
       <Tracejado />
       <T>{DECLARACAO}</T>
       <T pequeno>Assinatura do cliente:</T>
-      {coleta.assinatura?.tipo === "assinada" ? (
+      {coleta.assinatura?.tipo === "assinada" && coleta.assinatura.forma === "digitada" ? (
+        <View style={[estilos.assinatura, { justifyContent: "center" }]}>
+          <TextoAssinatura nome={coleta.assinatura.nome} fonte={coleta.assinatura.fonte} escala={0.85} />
+        </View>
+      ) : coleta.assinatura?.tipo === "assinada" ? (
         <View style={estilos.assinatura}>
           <Svg width="100%" height="100%" viewBox={`0 0 ${CAIXA_ASSINATURA.largura} ${CAIXA_ASSINATURA.altura}`}>
-            <Path d={coleta.assinatura.caminhoSvg} stroke={PRETO} strokeWidth={2.5} fill="none" strokeLinecap="round" strokeLinejoin="round" />
+            <Path d={coleta.assinatura.caminhoSvg ?? ""} stroke={PRETO} strokeWidth={2.5} fill="none" strokeLinecap="round" strokeLinejoin="round" />
           </Svg>
         </View>
       ) : (

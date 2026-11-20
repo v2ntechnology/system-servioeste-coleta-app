@@ -3,9 +3,10 @@ import { Image } from "expo-image";
 import { Redirect, router, useLocalSearchParams } from "expo-router";
 import { Camera, CircleCheck } from "lucide-react-native";
 import { useState } from "react";
-import { Platform, Switch, View } from "react-native";
+import { Platform, Pressable, Switch, View } from "react-native";
 
 import { Assinatura } from "@/components/Assinatura";
+import { AssinaturaDigitada } from "@/components/AssinaturaDigitada";
 import { Botao } from "@/components/ui/Botao";
 import { Cartao } from "@/components/ui/Cartao";
 import { CampoTexto } from "@/components/ui/CampoTexto";
@@ -13,17 +14,19 @@ import { Faixa } from "@/components/ui/Faixa";
 import { Passos } from "@/components/ui/Passos";
 import { Tela } from "@/components/ui/Tela";
 import { Texto } from "@/components/ui/Texto";
-import type { Assinatura as TipoAssinatura } from "@/dados/tipos";
+import type { FormaAssinatura, Assinatura as TipoAssinatura } from "@/dados/tipos";
 import { acoesColeta, useColetaEmCurso } from "@/features/coleta/useColeta";
 import { faltasDaAssinatura } from "@/regras/coleta";
-import { espaco, raio } from "@/tema/tokens";
+import { alvo, espaco, raio } from "@/tema/tokens";
 import { useTema } from "@/tema/useTema";
 
 export default function AssinaturaDoCliente() {
   const { paradaId } = useLocalSearchParams<{ paradaId: string }>();
   const { cores } = useTema();
   const curso = useColetaEmCurso(paradaId);
+  const [forma, setForma] = useState<FormaAssinatura>("digitada");
   const [caminho, setCaminho] = useState("");
+  const [fonte, setFonte] = useState<string | undefined>(undefined);
   const [nome, setNome] = useState("");
   const [foto, setFoto] = useState("");
   const [recusou, setRecusou] = useState(false);
@@ -34,7 +37,7 @@ export default function AssinaturaDoCliente() {
   if (!curso) return salvando ? null : <Redirect href={`/parada/${paradaId}`} />;
   const { coleta, cliente } = curso;
 
-  const faltas = recusou ? [] : faltasDaAssinatura({ caminhoSvg: caminho, nome, fotoDocumentoUri: foto });
+  const faltas = recusou ? [] : faltasDaAssinatura({ forma, caminhoSvg: caminho, fonte, nome, fotoDocumentoUri: foto });
 
   const fotografar = async () => {
     setErro(null);
@@ -52,7 +55,9 @@ export default function AssinaturaDoCliente() {
   const finalizar = async () => {
     const assinatura: TipoAssinatura = recusou
       ? { tipo: "recusada", nome: nome.trim() || undefined }
-      : { tipo: "assinada", caminhoSvg: caminho, nome, fotoDocumentoUri: foto };
+      : forma === "digitada"
+        ? { tipo: "assinada", forma, fonte, nome, fotoDocumentoUri: foto }
+        : { tipo: "assinada", forma, caminhoSvg: caminho, nome, fotoDocumentoUri: foto };
     setSalvando(true);
     try {
       await acoesColeta.finalizar(coleta.id, assinatura);
@@ -85,17 +90,67 @@ export default function AssinaturaDoCliente() {
     >
       <Passos atual={3} />
       <Texto variante="subtitulo">{cliente.nome}</Texto>
-      <Texto suave>Peça ao responsável para assinar na tela.</Texto>
+      <Texto suave>
+        {forma === "digitada"
+          ? "O responsável digita o nome e escolhe o estilo da assinatura."
+          : "Peça ao responsável para assinar na tela com o dedo."}
+      </Texto>
 
-      <Assinatura valor={caminho} aoMudar={setCaminho} desabilitado={recusou} />
+      <View style={{ flexDirection: "row", gap: espaco.xs, backgroundColor: cores.suave, padding: 4, borderRadius: raio.grande }} accessibilityRole="tablist">
+        {(
+          [
+            ["digitada", "Digitar o nome"],
+            ["desenhada", "Desenhar"],
+          ] as const
+        ).map(([valor, rotulo]) => (
+          <Pressable
+            key={valor}
+            accessibilityRole="tab"
+            accessibilityState={{ selected: forma === valor }}
+            onPress={() => setForma(valor)}
+            disabled={recusou}
+            style={{
+              flex: 1,
+              minHeight: alvo.minimo,
+              alignItems: "center",
+              justifyContent: "center",
+              borderRadius: raio.medio,
+              backgroundColor: forma === valor ? cores.cartao : "transparent",
+              borderWidth: forma === valor ? 1 : 0,
+              borderColor: cores.marca,
+              opacity: recusou ? 0.4 : 1,
+            }}
+            testID={`forma-${valor}`}
+          >
+            <Texto variante="rotulo">{rotulo}</Texto>
+          </Pressable>
+        ))}
+      </View>
 
-      <CampoTexto
-        rotulo={recusou ? "Nome de quem recusou (opcional)" : "Nome de quem assinou"}
-        value={nome}
-        onChangeText={setNome}
-        autoCapitalize="words"
-        testID="campo-nome"
-      />
+      {forma === "digitada" && !recusou ? (
+        <>
+          <CampoTexto
+            rotulo="Nome de quem assina"
+            placeholder="Ex.: Alex Moreira"
+            value={nome}
+            onChangeText={setNome}
+            autoCapitalize="words"
+            testID="campo-nome"
+          />
+          <AssinaturaDigitada nome={nome} fonte={fonte} aoEscolher={setFonte} />
+        </>
+      ) : (
+        <>
+          <Assinatura valor={caminho} aoMudar={setCaminho} desabilitado={recusou} />
+          <CampoTexto
+            rotulo={recusou ? "Nome de quem recusou (opcional)" : "Nome de quem assinou"}
+            value={nome}
+            onChangeText={setNome}
+            autoCapitalize="words"
+            testID="campo-nome"
+          />
+        </>
+      )}
 
       {!recusou ? (
         <Cartao>

@@ -187,7 +187,7 @@ export function gerarDadosFicticios(agora: Date = new Date()): DadosBanco {
           qr: { resultado: "valido", codigo: `SVC1.${cliente.id}.0.HISTORICO`, lidoEm: em },
           local: { ...cliente.area, precisao: 10, mocked: false, em },
         },
-        assinatura: { tipo: "assinada", caminhoSvg: ASSINATURA_EXEMPLO, nome: "Responsável do cliente", fotoDocumentoUri: "demo://documento" },
+        assinatura: { tipo: "assinada", forma: "desenhada", caminhoSvg: ASSINATURA_EXEMPLO, nome: "Responsável do cliente", fotoDocumentoUri: "demo://documento" },
         revisao: [],
         iniciadaEm: em,
         finalizadaEm: em,
