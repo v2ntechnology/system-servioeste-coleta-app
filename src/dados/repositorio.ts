@@ -29,7 +29,8 @@ import type {
 import { novoId } from "@/lib/id";
 import { comItem, errosParaFinalizar, garantirRascunho, semItem } from "@/regras/coleta";
 import { chaveSequencia, numeroComprovante } from "@/regras/comprovante";
-import { podeIniciar, validarMotivoMudanca } from "@/regras/ordem";
+import { paradasEmAberto, podeIniciar, validarMotivoMudanca } from "@/regras/ordem";
+import { erroParaEncerrar, resumoDoDia } from "@/regras/totais";
 
 export type DadosBanco = {
   versao: number;
@@ -76,6 +77,8 @@ type Acoes = {
     local: Localizacao | null;
   }) => string;
   atualizarItemFila: (id: string, mudanca: Partial<ItemDaFila>) => void;
+  /** Encerra a rota (só com todas as paradas resolvidas) e põe o resumo do dia na fila. */
+  encerrarRota: (rotaId: string) => void;
 };
 
 export type Banco = DadosBanco & Acoes;
@@ -279,6 +282,20 @@ export const useBanco = create<Banco>()(
 
       atualizarItemFila: (id, mudanca) =>
         set({ fila: get().fila.map((i) => (i.id === id ? { ...i, ...mudanca } : i)) }),
+
+      encerrarRota: (rotaId) => {
+        const estado = get();
+        const rota = rotaOuErro(estado, rotaId);
+        const erro = erroParaEncerrar(rota, paradasEmAberto(rota));
+        if (erro) throw new Error(erro);
+        const tipos = Object.fromEntries(estado.tiposResiduo.map((t) => [t.id, t]));
+        const encerradaEm = agoraIso();
+        const resumo = resumoDoDia(rota, estado.coletas, estado.naoColetas, tipos);
+        set({
+          rotas: estado.rotas.map((r) => (r.id === rotaId ? { ...r, situacao: "encerrada", encerradaEm } : r)),
+          fila: [...estado.fila, itemFila("encerramento", `enc_${rotaId}`, { rotaId, encerradaEm, resumo })],
+        });
+      },
     }),
     {
       name: CHAVES.banco,
@@ -288,7 +305,7 @@ export const useBanco = create<Banco>()(
       migrate: () => ({ ...BANCO_VAZIO }) as unknown as Banco,
       partialize: (estado) => {
         const { carregar, iniciarJornada, registrarMudancaDeOrdem, iniciarColeta, registrarQr, salvarItem, removerItem,
-          cancelarColeta, finalizarColeta, registrarNaoColeta, atualizarItemFila, ...dados } = estado;
+          cancelarColeta, finalizarColeta, registrarNaoColeta, atualizarItemFila, encerrarRota, ...dados } = estado;
         return dados;
       },
     },

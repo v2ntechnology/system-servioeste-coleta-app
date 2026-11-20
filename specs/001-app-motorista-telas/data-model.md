@@ -21,12 +21,11 @@ horas são strings ISO 8601 com fuso. Na fase do back-end, os mesmos tipos viram
 | nome | string | ex.: "Grupo A" |
 | classificacao | string | ex.: "Biológico" |
 | unidade | `"KG" \| "CN" \| "L" \| "UN"` | KG e L aceitam decimal (2 casas); CN e UN só inteiro |
-| quantidadeHabitual | number? | média do cliente; acima de 5× pede confirmação extra |
 
 ## Cliente
 `id`, `codigo` (ex.: `001258`), `nome`, `cnpj`, `endereco` {logradouro, numero, bairro, cidade, uf, cep},
 `area` {lat, lng, raioMetros = 150}, `periodicidade` (texto, ex.: "Semanal (quarta-feira)"),
-`contatos` {email?, whatsapp?}, `residuos`: `TipoResiduo["id"][]`, `segredoQr` (só para a rota do dia, ver
+`contatos` {email?, whatsapp?}, `residuos`: `TipoResiduo["id"][]`, `quantidadeHabitual` (média por tipo de resíduo; acima de 5× pede confirmação extra), `segredoQr` (só para a rota do dia, ver
 `contracts/qr-presenca.md`).
 
 ## Rota
@@ -61,12 +60,12 @@ horas são strings ISO 8601 com fuso. Na fase do back-end, os mesmos tipos viram
 | itens | {tipoResiduoId, quantidade}[] | ≥ 1; sem tipo repetido; tipo ∈ `cliente.residuos` |
 | prova.qr | {resultado: `"valido"`, codigo, lidoEm} \| {resultado: `"semQr"`, justificativa} | |
 | prova.local | {lat, lng, precisao, mocked} \| null | lida ao finalizar |
-| assinatura | {tipo: `"assinada"`, caminhoSvg, nome, fotoDocumentoUri} \| {tipo: `"recusada"`, nome?} | |
+| assinatura | {tipo: `"assinada"`, forma: `"desenhada" \| "digitada"`, caminhoSvg? (desenhada), fonte? (digitada), nome, fotoDocumentoUri} \| {tipo: `"recusada"`, nome?} | |
 | revisao | {motivo: `"semQr" \| "foraDaArea" \| "localizacaoFalsa" \| "semLocalizacao"`}[] | vazio = sem revisão |
 | iniciadaEm, finalizadaEm | string | |
 | comprovanteNumero | string | gerado ao finalizar |
 
-**Validação:** `finalizar` só aceita `itens.length ≥ 1` e a assinatura completa (traço + nome + foto) **ou** a recusa.
+**Validação:** `finalizar` só aceita `itens.length ≥ 1`, o QR lido ou justificado, e a assinatura completa (traço ou estilo escolhido + nome + foto) **ou** a recusa.
 
 ## NaoColeta
 `id`, `paradaId`, `rotaId`, `motivo` (`"localFechado" | "semResiduo" | "clienteNaoAutorizou" | "acessoImpedido" |

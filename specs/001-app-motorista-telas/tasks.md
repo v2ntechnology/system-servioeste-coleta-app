@@ -181,32 +181,32 @@ entrada e a jornada (`tests/fluxos/entrada.test.tsx`). As telas da coleta ainda 
 
 **Objetivo:** fila visível e envio automático. **Teste independente:** quickstart F.
 
-- [ ] T048 [P] [US6] Testes da fila em `tests/sincronizacao/fila.test.ts`: FIFO, idempotência, `semConexao` mantém
+- [X] T048 [P] [US6] Testes da fila em `tests/sincronizacao/fila.test.ts`: FIFO, idempotência, `semConexao` mantém
   `aguardando`, `recusado` vira `erro` sem travar os seguintes, a fila sobrevive à recarga e a saída da conta fica
   bloqueada com itens pendentes
-- [ ] T049 [US6] Criar o hook `src/features/sincronizacao/useSincronizacao.ts` (tenta ao criar, quando a conexão
+- [X] T049 [US6] Criar o hook `src/features/sincronizacao/useSincronizacao.ts` (tenta ao criar, quando a conexão
   volta, a cada 30 s e em "Tentar agora") e o componente `src/components/FaixaSincronizacao.tsx` ("Tudo
   sincronizado", "N aguardando envio", "Sem conexão: as coletas ficam guardadas neste aparelho"), usado em `/`,
   `/rota` e `/parada/[id]`
-- [ ] T050 [US6] Criar a tela `app/sincronizacao.tsx`, com aguardando, enviados de hoje, erros e "Tentar agora"
+- [X] T050 [US6] Criar a tela `app/sincronizacao.tsx`, com aguardando, enviados de hoje, erros e "Tentar agora"
 
 ## Fase 9 — História 7: provas e revisão (P2)
 
 **Objetivo:** marcar para revisão sem bloquear. **Teste independente:** quickstart G.
 
-- [ ] T051 [P] [US7] Testes de `src/regras/cerca.ts` em `tests/regras/cerca.test.ts`: haversine; dentro e fora de
+- [X] T051 [P] [US7] Testes de `src/regras/cerca.ts` em `tests/regras/cerca.test.ts`: haversine; dentro e fora de
   `raioMetros = 150`; sem posição → `semLocalizacao`; `mocked` → `localizacaoFalsa`
-- [ ] T052 [US7] Implementar `src/regras/cerca.ts` e `src/dispositivo/localizacao.ts` (`expo-location`, tempo limite
+- [X] T052 [US7] Implementar `src/regras/cerca.ts` e `src/dispositivo/localizacao.ts` (`expo-location`, tempo limite
   de 10 s, última posição conhecida, substituições do estado da demonstração), e ligar ao `finalizar` da coleta e
   da não coleta para preencher `prova.local` e `revisao[]`
-- [ ] T053 [US7] Mostrar a marca "Para revisão do escritório", com o motivo, na tela final, na rota, no histórico e no
+- [X] T053 [US7] Mostrar a marca "Para revisão do escritório", com o motivo, na tela final, na rota, no histórico e no
   comprovante
 
 ## Fase 10 — História 8: histórico (P2)
 
 **Objetivo:** consultar coletas anteriores. **Teste independente:** quickstart H1.
 
-- [ ] T054 [US8] Criar o hook `src/features/historico/useHistorico.ts` (agrupado por dia, do mais recente para o mais
+- [X] T054 [US8] Criar o hook `src/features/historico/useHistorico.ts` (agrupado por dia, do mais recente para o mais
   antigo) e as telas `app/historico/index.tsx` e `app/historico/[id].tsx`, só para leitura e com o link para o
   comprovante
 
@@ -214,9 +214,9 @@ entrada e a jornada (`tests/fluxos/entrada.test.tsx`). As telas da coleta ainda 
 
 **Objetivo:** resumo do dia. **Teste independente:** quickstart H2.
 
-- [ ] T055 [P] [US9] Testes de `src/regras/totais.ts` em `tests/regras/totais.test.ts`: Grupo A 10 kg + 12,8 kg =
+- [X] T055 [P] [US9] Testes de `src/regras/totais.ts` em `tests/regras/totais.test.ts`: Grupo A 10 kg + 12,8 kg =
   22,8 kg; as não coletas aparecem com o motivo; o encerramento é recusado com paradas pendentes
-- [ ] T056 [US9] Implementar `src/regras/totais.ts` e a tela `app/encerrar.tsx` (resumo e "Encerrar rota" → rota
+- [X] T056 [US9] Implementar `src/regras/totais.ts` e a tela `app/encerrar.tsx` (resumo e "Encerrar rota" → rota
   `encerrada`, item `encerramento` na fila e volta para `/`)
 
 ## Fase 12 — História 10: configurações e demonstração (P3)
@@ -233,15 +233,15 @@ demonstração.
 
 ## Fase 13 — Acabamento e validação
 
-- [ ] T059 [P] Escrever o manual do cliente em `docs/documentacao/usuario/` (`01-visao-geral.md`,
+- [X] T059 [P] Escrever o manual do cliente em `docs/documentacao/usuario/` (`01-visao-geral.md`,
   `02-jornada-e-rota.md`, `03-coleta.md`, `04-sem-internet.md`, `05-duvidas.md`), em linguagem simples e dizendo que
   é demonstração
-- [ ] T060 [P] Escrever a documentação técnica em `docs/documentacao/tecnico/` (`10-arquitetura-app.md`,
+- [X] T060 [P] Escrever a documentação técnica em `docs/documentacao/tecnico/` (`10-arquitetura-app.md`,
   `11-desenvolvimento.md`, `12-dados-ficticios-e-demonstracao.md`) e atualizar o `README.md` e o `CLAUDE.md` com os
   comandos do app
 - [ ] T061 Conferir no celular e no navegador: telas de 360 dp sem rolagem horizontal, alvos ≥ 48 dp, tema escuro
   legível e nenhuma barra de rolagem visível
-- [ ] T062 Rodar `make test-app`, `make lint-app` e `make check-no-mocks-app`, todos verdes
+- [X] T062 Rodar `make test-app`, `make lint-app` e `make check-no-mocks-app`, todos verdes
 - [ ] T063 Seguir `quickstart.md` de A a I no Expo Go e anotar no `docs/backlog.md` as diferenças em relação ao
   protótipo (SC-002)
 - [ ] T064 Apresentar à Servioeste e registrar no `docs/backlog.md` o que fica, o que sai e o que falta (SC-006)

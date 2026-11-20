@@ -7,6 +7,10 @@ const espera = (ms: number) => new Promise((resolve) => setTimeout(resolve, ms))
 
 export const transporteDemo: Transporte = {
   conectado: () => useEstadoDemo.getState().conectado,
+  observarConexao: (aoMudar) =>
+    useEstadoDemo.subscribe((novo, antigo) => {
+      if (novo.conectado !== antigo.conectado) aoMudar();
+    }),
   async enviar(item) {
     const estado = useEstadoDemo.getState();
     if (!estado.conectado) return { ok: false, motivo: "semConexao", mensagem: "Sem conexão." };

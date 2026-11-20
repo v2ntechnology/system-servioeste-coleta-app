@@ -4,6 +4,7 @@ import { useState } from "react";
 import { View } from "react-native";
 
 import { EscolhaMotivo } from "@/components/EscolhaMotivo";
+import { FaixaSincronizacao } from "@/components/FaixaSincronizacao";
 import { Aviso } from "@/components/ui/Aviso";
 import { Botao } from "@/components/ui/Botao";
 import { Cartao } from "@/components/ui/Cartao";
@@ -108,7 +109,7 @@ export default function DetalheDaParada() {
   }
 
   return (
-    <Tela rodape={rodape}>
+    <Tela rodape={rodape} topo={<FaixaSincronizacao />}>
       <View style={{ gap: espaco.xs }}>
         <Texto variante="pequeno" suave>
           Parada {parada.ordem} de {rota.paradas.length}

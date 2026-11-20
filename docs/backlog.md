@@ -12,7 +12,7 @@ Legenda: [x] feito · [ ] a fazer. Itens marcados **Proposta** ainda não foram 
 - [x] Spec Kit e constituição da Coleta.
 - [x] Makefile, testes, lint e checagem de simulados no build.
 - [x] Rotina `/encerrar-dia` e gerador de PDF (`make docs`).
-- [ ] Primeiros capítulos do manual e da documentação técnica.
+- [x] Primeiros capítulos do manual e da documentação técnica.
 - [ ] Área do desenvolvedor na parte web: visão geral, implementação, backlog, histórico, changelog e documentos.
 
 ## Etapa 1 — Front-end do app do motorista com dados fictícios (spec 001, antes de qualquer back-end)
@@ -25,9 +25,10 @@ Legenda: [x] feito · [ ] a fazer. Itens marcados **Proposta** ainda não foram 
 - [x] Coleta não realizada com o motivo, a hora e o local.
 - [x] Comprovante na tela: 1ª via, 2ª via e digital, com QR Code de verificação (impressão e envio simulados).
 - [x] Configurações: tema, sair da conta e menu de demonstração.
-- [ ] Sem internet: faixa de sincronização, tela da fila e envio automático.
-- [ ] Cerca virtual e detecção de localização falsa (marcam para revisão).
-- [ ] Histórico de coletas.
-- [ ] Encerrar a rota com o resumo do dia.
-- [ ] Manual do cliente e documentação técnica.
+- [x] Sem internet: faixa de sincronização, tela da fila e envio automático.
+- [x] Cerca virtual e detecção de localização falsa (marcam para revisão).
+- [x] Histórico de coletas.
+- [x] Encerrar a rota com o resumo do dia.
+- [x] Manual do cliente e documentação técnica.
+- [x] Assinatura digitada (o nome em estilos manuscritos) ou desenhada.
 - [ ] Conferir no celular (Expo Go) seguindo o roteiro de validação e apresentar à Servioeste.

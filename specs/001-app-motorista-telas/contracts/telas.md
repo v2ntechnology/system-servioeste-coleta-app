@@ -1,6 +1,6 @@
 # Contrato das telas (Expo Router)
 
-Rotas em `system-servioeste-coleta-app/app/`. A coluna "Protótipo" aponta a tela equivalente do protótipo
+Rotas em `src/app/` (padrão do Expo SDK 58). A coluna "Protótipo" aponta a tela equivalente do protótipo
 (`docs/WhatsApp Image 2026-11-19 at 2.48.11 PM.jpeg`, telas numeradas da esquerda para a direita e de cima para
 baixo).
 
@@ -22,7 +22,7 @@ baixo).
 | `/comprovante/[coletaId]` | 1ª via, 2ª via e digital; "Imprimir" e "Enviar" (simulados) | 5 | rodapé |
 | `/sincronizacao` | Fila: aguardando, enviados, erros; "Tentar agora" | 6 | rodapé ("Estado da coleta") |
 | `/historico` | Coletas e não coletas por dia | 8 | — (atalho da tela 2) |
-| `/historico/[id]` | Detalhe só leitura | 8 | — |
+| `/parada/[id]` (a partir do histórico) | Detalhe só leitura da parada resolvida, com o comprovante | 8 | — |
 | `/encerrar` | Resumo do dia → "Encerrar rota" | 9 | — (novo) |
 | `/configuracoes` | Dados, tema, sair; seção "Demonstração" no modo fictício | 10 | — (atalho da tela 2) |
 

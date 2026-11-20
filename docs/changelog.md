@@ -6,6 +6,14 @@ Registro diário do que foi adicionado, alterado e removido no projeto. A entrad
 
 ### Adicionado
 
+- **Sem internet**: faixa de sincronização no topo das telas, tela com o que falta enviar e envio automático quando a
+  conexão volta. Não dá para sair da conta com registros sem enviar.
+- **Revisão do escritório**: coleta confirmada fora da área do cliente, com localização falsa ou sem localização é
+  finalizada e marcada para revisão.
+- **Histórico** das coletas e não coletas por dia, e **encerramento da rota** com o resumo do dia.
+- **Assinatura digitada**: o nome aparece em estilos manuscritos e a pessoa escolhe; a assinatura desenhada continua.
+- Manual do cliente e documentação técnica.
+
 - Minimundo do Aplicativo de Coleta e protótipo das telas do app do motorista e do comprovante.
 - Orientações do projeto, backlog e proteção contra envio de dados sensíveis ao GitHub.
 - Spec Kit com a constituição da Coleta, rotina de encerramento do dia e geração dos PDFs.

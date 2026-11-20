@@ -11,6 +11,7 @@ import { SafeAreaProvider } from "react-native-safe-area-context";
 import { useBanco } from "@/dados/repositorio";
 import { instalarDemo, prepararDadosDemo } from "@/demo";
 import { useSessao } from "@/features/sessao/useSessao";
+import { useMotorSincronizacao } from "@/sincronizacao/fila";
 import { ARQUIVOS_FONTES_ASSINATURA } from "@/tema/fontesAssinatura";
 import { fonte } from "@/tema/tokens";
 import { usePreferenciaTema, useTema } from "@/tema/useTema";
@@ -59,6 +60,7 @@ export default function LayoutRaiz() {
 function Navegacao() {
   const { cores, escuro } = useTema();
   const logado = useSessao((s) => s.motoristaId !== null);
+  useMotorSincronizacao();
 
   return (
     <>
@@ -94,6 +96,9 @@ function Navegacao() {
           <Stack.Screen name="nao-coleta/[paradaId]" options={{ title: "Não foi possível coletar" }} />
           <Stack.Screen name="comprovante/[coletaId]" options={{ title: "Comprovante" }} />
           <Stack.Screen name="configuracoes" options={{ title: "Configurações" }} />
+          <Stack.Screen name="sincronizacao" options={{ title: "Sincronização" }} />
+          <Stack.Screen name="historico/index" options={{ title: "Histórico" }} />
+          <Stack.Screen name="encerrar" options={{ title: "Encerrar rota" }} />
         </Stack.Protected>
       </Stack>
     </>

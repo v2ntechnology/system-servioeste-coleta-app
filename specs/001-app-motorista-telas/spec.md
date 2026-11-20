@@ -4,7 +4,7 @@
 
 **Criada em**: 2026-11-19
 
-**Situação**: Plano pronto
+**Situação**: Implementada; aguardando validação no celular e com a Servioeste
 
 **Pedido**: "Front-end do app do motorista com dados fictícios, seguindo o protótipo em docs/: login, início da
 jornada (veículo, motorista, coletor, data), rota do dia com paradas e situação, detalhe do cliente, coleta completa

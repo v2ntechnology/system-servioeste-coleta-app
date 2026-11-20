@@ -83,6 +83,32 @@ describe("coleta completa", () => {
     expect(useBanco.getState().coletas[id].revisao).toEqual([{ motivo: "semQr" }]);
   });
 
+  it("fora da área e com GPS falso a coleta é finalizada, mas marcada para revisão", async () => {
+    const { lerLocalizacao } = jest.requireMock("@/dispositivo/localizacao") as { lerLocalizacao: jest.Mock };
+    lerLocalizacao.mockResolvedValueOnce({ lat: -22.9, lng: -43.4652, precisao: 8, mocked: true, em: new Date().toISOString() });
+    const rota = preparar();
+    const p1 = rota.paradas[0];
+    const id = acoesColeta.iniciar(rota.id, p1.id);
+    lerQrValido(id, p1.clienteId);
+    acoesColeta.salvarItem(id, { tipoResiduoId: "res_a", quantidade: 1 });
+    await acoesColeta.finalizar(id, assinada);
+    const coleta = useBanco.getState().coletas[id];
+    expect(coleta.situacao).toBe("finalizada");
+    expect(coleta.revisao.map((r) => r.motivo).sort()).toEqual(["foraDaArea", "localizacaoFalsa"]);
+  });
+
+  it("sem localização a coleta fica marcada como sem localização", async () => {
+    const { lerLocalizacao } = jest.requireMock("@/dispositivo/localizacao") as { lerLocalizacao: jest.Mock };
+    lerLocalizacao.mockResolvedValueOnce(null);
+    const rota = preparar();
+    const p1 = rota.paradas[0];
+    const id = acoesColeta.iniciar(rota.id, p1.id);
+    lerQrValido(id, p1.clienteId);
+    acoesColeta.salvarItem(id, { tipoResiduoId: "res_a", quantidade: 1 });
+    await acoesColeta.finalizar(id, assinada);
+    expect(useBanco.getState().coletas[id].revisao).toEqual([{ motivo: "semLocalizacao" }]);
+  });
+
   it("não deixa adicionar resíduo que não é do cliente nem finalizar sem itens", async () => {
     const rota = preparar();
     const p1 = rota.paradas[0];
@@ -152,5 +178,27 @@ describe("sessão", () => {
     await registrarNaoColeta({ rotaId: rota.id, paradaId: rota.paradas[0].id, motivo: "localFechado" });
     expect(useSessao.getState().sair()).toMatch(/ainda não enviado/);
     expect(useSessao.getState().motoristaId).toBe("pes_alan");
+  });
+});
+
+describe("encerrar a rota", () => {
+  it("recusa com paradas em aberto e encerra quando todas estão resolvidas", async () => {
+    const rota = preparar();
+    expect(() => useBanco.getState().encerrarRota(rota.id)).toThrow(/faltam 5 paradas/);
+
+    const [p1, ...outras] = rota.paradas;
+    const id = acoesColeta.iniciar(rota.id, p1.id);
+    lerQrValido(id, p1.clienteId);
+    acoesColeta.salvarItem(id, { tipoResiduoId: "res_a", quantidade: 10 });
+    await acoesColeta.finalizar(id, assinada);
+    for (const p of outras) await registrarNaoColeta({ rotaId: rota.id, paradaId: p.id, motivo: "localFechado" });
+
+    useBanco.getState().encerrarRota(rota.id);
+    const encerrada = useBanco.getState().rotas.find((r) => r.id === rota.id)!;
+    expect(encerrada.situacao).toBe("encerrada");
+    expect(encerrada.encerradaEm).toBeTruthy();
+    const item = useBanco.getState().fila.find((i) => i.tipo === "encerramento");
+    expect(item?.dados).toMatchObject({ rotaId: rota.id, resumo: { feitas: 1, emAberto: 0 } });
+    expect(() => useBanco.getState().encerrarRota(rota.id)).toThrow(/já foi encerrada/);
   });
 });

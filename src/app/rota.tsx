@@ -1,7 +1,9 @@
 import { Redirect, router } from "expo-router";
-import { CircleCheck } from "lucide-react-native";
+import { CircleCheck, Flag } from "lucide-react-native";
 import { StyleSheet, View } from "react-native";
 
+import { FaixaSincronizacao } from "@/components/FaixaSincronizacao";
+import { Botao } from "@/components/ui/Botao";
 import { Cartao } from "@/components/ui/Cartao";
 import { Faixa } from "@/components/ui/Faixa";
 import { Selo } from "@/components/ui/Selo";
@@ -28,7 +30,20 @@ export default function RotaDoDia() {
   const paradas = [...rota.paradas].sort((a, b) => a.ordem - b.ordem);
 
   return (
-    <Tela>
+    <Tela
+      topo={<FaixaSincronizacao />}
+      rodape={
+        rota.situacao === "emAndamento" ? (
+          <Botao
+            titulo="Encerrar rota"
+            icone={Flag}
+            variante={emAberto === 0 ? "principal" : "fantasma"}
+            aoTocar={() => router.push("/encerrar")}
+            testID="botao-ir-encerrar"
+          />
+        ) : null
+      }
+    >
       <View style={{ gap: 2 }}>
         <Texto variante="titulo">
           {rota.codigo} · {rota.regiao}

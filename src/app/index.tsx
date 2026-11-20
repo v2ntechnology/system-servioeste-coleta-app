@@ -1,7 +1,8 @@
 import { router } from "expo-router";
-import { CloudOff, Play, Route, Settings } from "lucide-react-native";
+import { History, ListChecks, Play, Route, Settings } from "lucide-react-native";
 import { View } from "react-native";
 
+import { FaixaSincronizacao } from "@/components/FaixaSincronizacao";
 import { Botao } from "@/components/ui/Botao";
 import { Cartao } from "@/components/ui/Cartao";
 import { Faixa } from "@/components/ui/Faixa";
@@ -10,28 +11,27 @@ import { Simbolo } from "@/components/ui/Logo";
 import { Selo } from "@/components/ui/Selo";
 import { Tela } from "@/components/ui/Tela";
 import { Texto } from "@/components/ui/Texto";
-import { useBanco } from "@/dados/repositorio";
 import { useJornada } from "@/features/jornada/useJornada";
 import { useMotorista } from "@/features/sessao/useSessao";
 import { data, diaDaSemana, primeiroNome } from "@/lib/formato";
 import { paradasEmAberto } from "@/regras/ordem";
-import { pendentes } from "@/sincronizacao/fila";
 import { espaco } from "@/tema/tokens";
 
 export default function Inicio() {
   const motorista = useMotorista();
   const jornada = useJornada();
-  const naFila = useBanco((b) => pendentes(b.fila).length);
   const rota = jornada?.rota;
 
   const botao = !rota ? null : rota.situacao === "liberada" ? (
     <Botao titulo="Iniciar jornada" icone={Play} aoTocar={() => router.push("/jornada")} testID="botao-iniciar-jornada" />
   ) : rota.situacao === "emAndamento" ? (
     <Botao titulo="Continuar rota" icone={Route} aoTocar={() => router.push("/rota")} testID="botao-continuar-rota" />
-  ) : null;
+  ) : (
+    <Botao titulo="Ver resumo do dia" icone={ListChecks} variante="secundario" aoTocar={() => router.push("/encerrar")} />
+  );
 
   return (
-    <Tela rodape={botao}>
+    <Tela rodape={botao} topo={<FaixaSincronizacao />}>
       <View style={{ flexDirection: "row", alignItems: "center", gap: espaco.md, marginBottom: espaco.sm }}>
         <Simbolo tamanho={40} />
         <View style={{ flex: 1, gap: espaco.xs }}>
@@ -64,14 +64,11 @@ export default function Inicio() {
         />
       )}
 
-      {naFila > 0 ? (
-        <Faixa
-          icone={CloudOff}
-          tom="aviso"
-          texto={`${naFila} ${naFila === 1 ? "registro aguardando" : "registros aguardando"} envio. Eles estão guardados neste aparelho.`}
-        />
+      {rota?.situacao === "encerrada" ? (
+        <Faixa titulo="Rota de hoje encerrada" texto="Bom descanso! A próxima jornada aparece aqui quando o escritório liberar a rota." />
       ) : null}
 
+      <ItemLista titulo="Histórico" descricao="Coletas e não coletas dos últimos dias" icone={History} aoTocar={() => router.push("/historico")} testID="atalho-historico" />
       <ItemLista titulo="Configurações" descricao="Tema, conta e demonstração" icone={Settings} aoTocar={() => router.push("/configuracoes")} />
     </Tela>
   );
